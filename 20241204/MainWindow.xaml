@@ -31,7 +31,8 @@
             <!-- 下拉選單，用來選擇學生 -->
             <ComboBox x:Name="cmbStudent" Margin="30, 0, 0, 0"
                       Width="250" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" 
-                      VerticalContentAlignment="Center" />
+                      VerticalContentAlignment="Center" 
+                      SelectionChanged="cmbStudent_SelectionChanged"/>
             
         </StackPanel>
 
@@ -39,20 +40,21 @@
         <TabControl Grid.Row="1">
             <!-- 以教師分類課程選項卡 -->
             <TabItem Header="以教師分類課程">
-                <TreeView x:Name="tvTeacher" Background="#FFFAF7E7">
+                <TreeView x:Name="tvTeacher" Background="#FFFAF7E7"
+                          SelectedItemChanged="tvTeacher_SelectedItemChanged">
                     <!-- 顯示教師分類課程的樹狀視圖 -->
                     <TreeView.Resources>
                         <!-- 自定義樹狀視圖的資料模板 -->
                         <HierarchicalDataTemplate DataType="{x:Type local:Teacher}" ItemsSource="{Binding TeachingCourses}">
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="0,2,0,2" Orientation="Horizontal">
                                 <!-- 顯示教師圖像 -->
                                 <Image Width="20" Height="20" Source="/teacher.png"/>
                                 <!-- 顯示教師名稱 -->
-                                <TextBlock Text="{Binding TeacherName}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding TeacherName}" FontWeight="Bold" FontSize="14"/>
                                 <!-- 顯示該教師教授的課程數量 -->
-                                <TextBlock Text="("/>
-                                <TextBlock Text="{Binding TeachingCourses.Count}"/>
-                                <TextBlock Text=")"/>
+                                <TextBlock Text="(" FontSize="14"/>
+                                <TextBlock Text="{Binding TeachingCourses.Count}" FontSize="14"/>
+                                <TextBlock Text=")" FontSize="14"/>
                             </StackPanel>
                         </HierarchicalDataTemplate>
                         <!-- 顯示課程資料的模板 -->
@@ -80,8 +82,30 @@
 
             <!-- 所有課程選項卡 -->
             <TabItem Header="所有課程">
-                <ListBox x:Name="lbCourse" Background="#FFFAEBE7"/>
                 <!-- 顯示所有課程的列表框 -->
+                <ListBox x:Name="lbCourse" Background="#FFFAEBE7" SelectionChanged="lbCourse_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" Margin="0,2,0,2">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="20" Height="20" Source="/course.png"/>
+                                    <TextBlock Text="{Binding CourseName}" FontWeight="Bold"/>
+                                    <TextBlock Text="("/>
+                                    <TextBlock Text="{Binding Type}"/>
+                                    <TextBlock Text="{Binding Points}"/>
+                                    <TextBlock Text="學分"/>
+                                    <TextBlock Text=")"/>
+                                    <TextBlock Text="/"/>
+                                    <TextBlock Text="{Binding OpeningClass}" Background="#FFDEF6BF"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding CourseDescription}"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
             </TabItem>
         </TabControl>
 
@@ -90,7 +114,8 @@
             <!-- 選課按鈕 -->
             <Button x:Name="btnAdd" Content="選課"  Margin="0, 50, 0, 10" 
                     Width="80" Height="30" 
-                    FontSize="16" FontWeight="Bold"/>
+                    FontSize="16" FontWeight="Bold"
+                    Click="btnAdd_Click"/>
             <!-- 退選按鈕 -->
             <Button x:Name="btnDelete" Content="退選" Margin="0, 20, 0, 10"
                     Width="80" Height="30"  

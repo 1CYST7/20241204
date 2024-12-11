@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
@@ -20,6 +21,11 @@ namespace _20241204
         List<Course> courses = new List<Course>();  // 宣告課程清單，存放所有課程資料
         List<Teacher> teachers = new List<Teacher>();  // 宣告老師清單，存放所有老師資料
 
+
+        Student selectedStudent = null;
+        Course selectedCourse = null;
+        Teacher selectedTeacher = null;
+        Record selectedRecord = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -55,6 +61,39 @@ namespace _20241204
             teacher3.TeachingCourses.Add(new Course(teacher3) { CourseId = "C007", CourseName = "智慧型系統應用", CourseDescription = "本課程完整而淺顯地介紹研習人工智慧技術、智慧型系統與相關機電資領域所需的專業基礎，並詳細探討各種新進的智慧型系統應用技術。", Type = "選修", Points = 3, OpeningClass = "四技控晶四甲, 四技控晶四乙" });
             // 將新增的老師資料加入教師清單中
             teachers.AddRange(new Teacher[] { teacher1, teacher2, teacher3 });
+
+            foreach (Teacher teacher in teachers)
+            {
+                foreach (Course course in teacher.TeachingCourses)
+                {
+                    courses.Add(course);
+                }
+            }
+            lbCourse.ItemsSource = courses;
+        }
+        private void cmbStudent_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedStudent = cmbStudent.SelectedItem as Student;
+            labelStatus.Content = $"選擇學生：{selectedStudent.StudentName}";
+        }
+        private void lbCourse_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedCourse = lbCourse.SelectedItem as Course;
+            labelStatus.Content = $"選擇課程：{selectedCourse.CourseName}";
+        }
+
+        private void tvTeacher_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (tvTeacher.SelectedItem is Course)
+            {
+                selectedCourse = tvTeacher.SelectedItem as Course;
+                labelStatus.Content = $"選擇課程：{selectedCourse.CourseName}";
+            }
+            else if (tvTeacher.SelectedItem is Teacher)
+            {
+                selectedTeacher = tvTeacher.SelectedItem as Teacher;
+                labelStatus.Content = $"選擇教師：{selectedTeacher.TeacherName}";
+            }
         }
     }
     
