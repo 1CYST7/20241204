@@ -7,68 +7,115 @@
         mc:Ignorable="d"
         Title="選課系統" Height="450" Width="800">
     <Grid>
+        <!-- 使用 Grid 容器來佈局 UI 元素 -->
         <Grid.RowDefinitions>
+            <!-- 定義 Grid 的行數 -->
             <RowDefinition Height="50"/>
             <RowDefinition Height="500*"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <!-- 定義 Grid 的列數 -->
             <ColumnDefinition Width="500*"/>
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="500*"/>
         </Grid.ColumnDefinitions>
+
+        <!-- 學生選擇區域，放置在第一行，跨越所有三列 -->
         <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" Background="LightCyan">
-            <Label Content="學生" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" FontSize="16" FontWeight="Bold" Margin="100, 0, 0, 0"/>
-            <ComboBox x:Name="cmbStudent" Width="250" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="30, 0, 0, 0"/>
+            <!-- 標籤顯示 "學生" -->
+            <Label Content="學生" Margin="100, 0, 0, 0" 
+                   HorizontalAlignment="Left" VerticalAlignment="Center" 
+                   VerticalContentAlignment="Center" 
+                   FontSize="16" FontWeight="Bold" />
+            <!-- 下拉選單，用來選擇學生 -->
+            <ComboBox x:Name="cmbStudent" Margin="30, 0, 0, 0"
+                      Width="250" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                      VerticalContentAlignment="Center" />
+            
         </StackPanel>
+
+        <!-- 設定選項卡，包含兩個選項卡 -->
         <TabControl Grid.Row="1">
+            <!-- 以教師分類課程選項卡 -->
             <TabItem Header="以教師分類課程">
                 <TreeView x:Name="tvTeacher" Background="#FFFAF7E7">
+                    <!-- 顯示教師分類課程的樹狀視圖 -->
                     <TreeView.Resources>
+                        <!-- 自定義樹狀視圖的資料模板 -->
                         <HierarchicalDataTemplate DataType="{x:Type local:Teacher}" ItemsSource="{Binding TeachingCourses}">
                             <StackPanel Orientation="Horizontal">
+                                <!-- 顯示教師圖像 -->
                                 <Image Width="20" Height="20" Source="/teacher.png"/>
+                                <!-- 顯示教師名稱 -->
                                 <TextBlock Text="{Binding TeacherName}" FontWeight="Bold"/>
+                                <!-- 顯示該教師教授的課程數量 -->
                                 <TextBlock Text="("/>
                                 <TextBlock Text="{Binding TeachingCourses.Count}"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
                         </HierarchicalDataTemplate>
+                        <!-- 顯示課程資料的模板 -->
                         <DataTemplate DataType="{x:Type local:Course}">
                             <StackPanel Orientation="Horizontal">
+                                <!-- 顯示課程圖像 -->
                                 <Image Width="20" Height="20" Source="/course.png"/>
-                                <TextBlock Text="{Binding CourseName}"  FontWeight="Bold"/>
+                                <!-- 顯示課程名稱 -->
+                                <TextBlock Text="{Binding CourseName}" FontWeight="Bold"/>
+                                <!-- 顯示課程類型 -->
                                 <TextBlock Text="("/>
                                 <TextBlock Text="{Binding Type}"/>
+                                <!-- 顯示課程學分 -->
                                 <TextBlock Text="{Binding Points}"/>
                                 <TextBlock Text="學分"/>
                                 <TextBlock Text=")"/>
                                 <TextBlock Text="/"/>
+                                <!-- 顯示開課班級 -->
                                 <TextBlock Text="{Binding OpeningClass}" Background="#FFDEF6BF" />
                             </StackPanel>
                         </DataTemplate>
                     </TreeView.Resources>
                 </TreeView>
             </TabItem>
+
+            <!-- 所有課程選項卡 -->
             <TabItem Header="所有課程">
                 <ListBox x:Name="lbCourse" Background="#FFFAEBE7"/>
+                <!-- 顯示所有課程的列表框 -->
             </TabItem>
         </TabControl>
+
+        <!-- 右側選課操作按鈕 -->
         <StackPanel Grid.Column="1" Grid.Row="1" Background="#FFECE7E7" Orientation="Vertical">
-            <Button x:Name="btnAdd" Content="選課" Width="80" Height="30" Margin="0, 50, 0, 10" FontSize="16" FontWeight="Bold"/>
-            <Button x:Name="btnDelete" Content="退選" Width="80" Height="30" Margin="0, 20, 0, 10" FontSize="16" FontWeight="Bold"/>
-            <Button x:Name="btnSave" Content="儲存紀錄" Width="80" Height="30" Margin="0, 20, 0, 10" FontSize="16" FontWeight="Bold"/>
+            <!-- 選課按鈕 -->
+            <Button x:Name="btnAdd" Content="選課"  Margin="0, 50, 0, 10" 
+                    Width="80" Height="30" 
+                    FontSize="16" FontWeight="Bold"/>
+            <!-- 退選按鈕 -->
+            <Button x:Name="btnDelete" Content="退選" Margin="0, 20, 0, 10"
+                    Width="80" Height="30"  
+                    FontSize="16" FontWeight="Bold"/>
+            <!-- 儲存紀錄按鈕 -->
+            <Button x:Name="btnSave" Content="儲存紀錄" Margin="0, 20, 0, 10"
+                    Width="80" Height="30"  
+                    FontSize="16" FontWeight="Bold"/>
         </StackPanel>
+
+        <!-- 顯示選擇的課程資訊 -->
         <ListView Grid.Column="2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Background="#FFEEF7DF">
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
+                    <!-- 顯示課程資訊的 GridView 欄位 -->
                 </GridView>
             </ListView.View>
         </ListView>
+
+        <!-- 底部顯示狀態 -->
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3" Background="#FFC7C2C2">
             <StatusBarItem>
                 <Label x:Name="labelStatus" Content="Ready" Margin="100,0,0,0"/>
+                <!-- 顯示狀態，初始為 "Ready" -->
             </StatusBarItem>
         </StatusBar>
     </Grid>
