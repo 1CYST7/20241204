@@ -119,19 +119,27 @@
             <!-- 退選按鈕 -->
             <Button x:Name="btnDelete" Content="退選" Margin="0, 20, 0, 10"
                     Width="80" Height="30"  
-                    FontSize="16" FontWeight="Bold"/>
+                    FontSize="16" FontWeight="Bold"
+                    Click="btnDelete_Click"/>
             <!-- 儲存紀錄按鈕 -->
             <Button x:Name="btnSave" Content="儲存紀錄" Margin="0, 20, 0, 10"
                     Width="80" Height="30"  
-                    FontSize="16" FontWeight="Bold"/>
+                    FontSize="16" FontWeight="Bold"
+                    Click="btnSave_Click"/>
         </StackPanel>
 
         <!-- 顯示選擇的課程資訊 -->
-        <ListView Grid.Column="2" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}" Background="#FFEEF7DF">
+        <ListView x:Name="lvRecord" Grid.Column="2" Grid.Row="1" d:ItemsSource="{Binding records}" Background="#FFEEF7DF" 
+                  SelectionChanged="lvRecord_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
-                    <!-- 顯示課程資訊的 GridView 欄位 -->
+                    <GridViewColumn Header="學號" DisplayMemberBinding="{Binding SelectedStudent.StudentId}"/>
+                    <GridViewColumn Header="姓名" DisplayMemberBinding="{Binding SelectedStudent.StudentName}"/>
+                    <GridViewColumn Header="課程名稱" DisplayMemberBinding="{Binding SelectedCourse.CourseName}"/>
+                    <GridViewColumn Header="授課教師" DisplayMemberBinding="{Binding SelectedCourse.Tutor.TeacherName}"/>
+                    <GridViewColumn Header="類型" DisplayMemberBinding="{Binding SelectedCourse.Type}"/>
+                    <GridViewColumn Header="學分" DisplayMemberBinding="{Binding SelectedCourse.Points}"/>
+                    <GridViewColumn Header="開課班級" DisplayMemberBinding="{Binding SelectedCourse.OpeningClass}"/>
                 </GridView>
             </ListView.View>
         </ListView>

@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Microsoft.Win32;
+using System.Text;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace _20241204
 {
@@ -17,9 +20,10 @@ namespace _20241204
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Student> students = new List<Student>();  // 宣告學生清單，存放所有學生資料
-        List<Course> courses = new List<Course>();  // 宣告課程清單，存放所有課程資料
-        List<Teacher> teachers = new List<Teacher>();  // 宣告老師清單，存放所有老師資料
+        List<Student> students = new List<Student>();
+        List<Course> courses = new List<Course>();
+        List<Teacher> teachers = new List<Teacher>();
+        List<Record> records = new List<Record>();
 
 
         Student selectedStudent = null;
@@ -93,6 +97,77 @@ namespace _20241204
             {
                 selectedTeacher = tvTeacher.SelectedItem as Teacher;
                 labelStatus.Content = $"選擇教師：{selectedTeacher.TeacherName}";
+            }
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedStudent == null || selectedCourse == null)
+            {
+                MessageBox.Show("請選取學生或課程");
+                return;
+            }
+            else
+            {
+                Record newRecord = new Record
+                {
+                    SelectedStudent = selectedStudent,
+                    SelectedCourse = selectedCourse
+                };
+
+                foreach (Record r in records)
+                {
+                    if (r.Equals(newRecord))
+                    {
+                        MessageBox.Show("此學生已選取此課程");
+                        return;
+                    }
+                }
+                records.Add(newRecord);
+                lvRecord.ItemsSource = records;
+                lvRecord.Items.Refresh();
+            }
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (selectedRecord == null)
+            {
+                MessageBox.Show("請選取紀錄");
+                return;
+            }
+            else
+            {
+                records.Remove(selectedRecord);
+                lvRecord.ItemsSource = records;
+                lvRecord.Items.Refresh();
+            }
+        }
+
+        private void lvRecord_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lvRecord.SelectedItem is Record)
+            {
+                selectedRecord = lvRecord.SelectedItem as Record;
+                labelStatus.Content = $"選擇紀錄：{selectedRecord.SelectedStudent.StudentName} - {selectedRecord.SelectedCourse.CourseName}";
+            }
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Json Files(*.json)|*.json|All Files(*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                };
+                string json = JsonSerializer.Serialize(records, options);
+                File.WriteAllText(saveFileDialog.FileName, json);
+                MessageBox.Show("資料已儲存");
             }
         }
     }
