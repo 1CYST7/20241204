@@ -109,7 +109,7 @@
             </TabItem>
         </TabControl>
 
-        <!-- 右側選課操作按鈕 -->
+        <!-- 中間選課操作按鈕 -->
         <StackPanel Grid.Column="1" Grid.Row="1" Background="#FFECE7E7" Orientation="Vertical">
             <!-- 選課按鈕 -->
             <Button x:Name="btnAdd" Content="選課"  Margin="0, 50, 0, 10" 
@@ -128,7 +128,7 @@
                     Click="btnSave_Click"/>
         </StackPanel>
 
-        <!-- 顯示選擇的課程資訊 -->
+        <!-- 右側顯示選擇的課程資訊 -->
         <ListView x:Name="lvRecord" Grid.Column="2" Grid.Row="1" d:ItemsSource="{Binding records}" Background="#FFEEF7DF" 
                   SelectionChanged="lvRecord_SelectionChanged">
             <ListView.View>
