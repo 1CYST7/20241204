@@ -82,91 +82,121 @@ namespace _20241204
         }
         private void lbCourse_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // 當課程列表中的選擇項目改變時觸發
             selectedCourse = lbCourse.SelectedItem as Course;
+            // 更新狀態欄顯示選擇的課程名稱
             labelStatus.Content = $"選擇課程：{selectedCourse.CourseName}";
         }
 
         private void tvTeacher_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            // 當教師樹狀視圖中的選擇項目改變時觸發
             if (tvTeacher.SelectedItem is Course)
             {
+                // 如果選擇的是課程，更新選擇的課程
                 selectedCourse = tvTeacher.SelectedItem as Course;
+                // 更新狀態欄顯示選擇的課程名稱
                 labelStatus.Content = $"選擇課程：{selectedCourse.CourseName}";
             }
             else if (tvTeacher.SelectedItem is Teacher)
             {
+                // 如果選擇的是教師，更新選擇的教師
                 selectedTeacher = tvTeacher.SelectedItem as Teacher;
+                // 更新狀態欄顯示選擇的教師名稱
                 labelStatus.Content = $"選擇教師：{selectedTeacher.TeacherName}";
+            
             }
         }
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
+            // 當點擊 "選課" 按鈕時觸發
             if (selectedStudent == null || selectedCourse == null)
             {
+                // 如果未選擇學生或課程，顯示提示訊息
                 MessageBox.Show("請選取學生或課程");
                 return;
             }
             else
             {
+                // 創建新的選課紀錄
                 Record newRecord = new Record
                 {
                     SelectedStudent = selectedStudent,
                     SelectedCourse = selectedCourse
                 };
 
+                // 檢查是否已經存在相同的選課紀錄
                 foreach (Record r in records)
                 {
                     if (r.Equals(newRecord))
                     {
+                        // 如果已經存在，顯示提示訊息
                         MessageBox.Show("此學生已選取此課程");
                         return;
                     }
                 }
+                // 將新的選課紀錄加入紀錄清單
                 records.Add(newRecord);
+                // 更新選課紀錄列表的資料來源
                 lvRecord.ItemsSource = records;
+                // 刷新選課紀錄列表
                 lvRecord.Items.Refresh();
             }
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            // 當點擊 "退選" 按鈕時觸發
             if (selectedRecord == null)
             {
+                // 如果未選擇紀錄，顯示提示訊息
                 MessageBox.Show("請選取紀錄");
                 return;
             }
             else
             {
+                // 從紀錄清單中移除選擇的紀錄
                 records.Remove(selectedRecord);
+                // 更新選課紀錄列表的資料來源
                 lvRecord.ItemsSource = records;
+                // 刷新選課紀錄列表
                 lvRecord.Items.Refresh();
             }
         }
 
         private void lvRecord_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // 當選課紀錄列表中的選擇項目改變時觸發
             if (lvRecord.SelectedItem is Record)
             {
+                // 更新選擇的紀錄
                 selectedRecord = lvRecord.SelectedItem as Record;
+                // 更新狀態欄顯示選擇的紀錄資訊
                 labelStatus.Content = $"選擇紀錄：{selectedRecord.SelectedStudent.StudentName} - {selectedRecord.SelectedCourse.CourseName}";
             }
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            // 當點擊 "儲存紀錄" 按鈕時觸發
             SaveFileDialog saveFileDialog = new SaveFileDialog();
+            // 設定檔案篩選器
             saveFileDialog.Filter = "Json Files(*.json)|*.json|All Files(*.*)|*.*";
             if (saveFileDialog.ShowDialog() == true)
             {
+                // 設定 JSON 序列化選項
                 var options = new JsonSerializerOptions
                 {
                     WriteIndented = true,
                     ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
                     Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
                 };
+                // 將紀錄清單序列化為 JSON 字串
                 string json = JsonSerializer.Serialize(records, options);
+                // 將 JSON 字串寫入選擇的檔案
                 File.WriteAllText(saveFileDialog.FileName, json);
+                // 顯示提示訊息
                 MessageBox.Show("資料已儲存");
             }
         }
